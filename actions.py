@@ -49,10 +49,10 @@ class Edit(Base):
         data = self.readDB()
 
         tpath = subprocess.check_output(['/bin/mktemp']).strip()
+	os.chmod(tpath, 600)
         with open(tpath, 'wb') as tempStorage:
             tempStorage.write(data)
 
-        os.chmod(tpath, 600)
         subprocess.call(['vi ' + tpath], shell=True)
 
         selection = raw_input('База данных будет обновлена, продолжить? (y/n): ')
