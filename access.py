@@ -5,10 +5,10 @@ import actions
 from init import Init
 
 if __name__ == '__main__':
-    loader = Init()
-    config = loader.getConfig()
-
     try:
+        loader = Init()
+        config = loader.getConfig()
+
         action = getattr(actions, config.action)(config)
         action.run()
     except Exception as e:
