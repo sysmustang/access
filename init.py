@@ -25,6 +25,10 @@ class Init:
         parser.add_argument('-s', '--setup', action='store_true', help='Установка БД')
         self.arguments = parser.parse_args()
 
+        uid = int(subprocess.check_output(['/usr/bin/id', '-u']))
+        if uid != 0:
+            raise Exception('Похоже нехватает прав.. Are you root?')
+
         self._getAction()
         self._getPassword()
 

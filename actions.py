@@ -33,23 +33,18 @@ class Show(Base):
 
     def run(self):
         self.existsDB()
-
-        try:
-            data = self.readDB().strip()
-        except IOError:
-            raise Exception('Похоже нехватает прав.. Are you root?')
-
+        data = self.readDB().strip()
         print(data)
 
 class Edit(Base):
 
     def run(self):
         self.existsDB()
-
         data = self.readDB()
 
         tpath = subprocess.check_output(['/bin/mktemp']).strip()
-	os.chmod(tpath, 600)
+        os.chmod(tpath, 600)
+
         with open(tpath, 'wb') as tempStorage:
             tempStorage.write(data)
 
@@ -65,26 +60,24 @@ class Edit(Base):
         with open(tpath, 'rb') as tempStorage:
             editData = tempStorage.read()
 
+        os.unlink(tpath)
         self.writeDB(editData)
 
 
 class Setup(Base):
 
     def run(self):
-        try:
-            if os.path.exists(self.storagePath):
+        if os.path.exists(self.storagePath):
+            selection = raw_input('Текущая база данных будет удалена, продолжить? (y/n): ')
+            while selection != 'y' and selection != 'n':
                 selection = raw_input('Текущая база данных будет удалена, продолжить? (y/n): ')
-                while selection != 'y' and selection != 'n':
-                    selection = raw_input('Текущая база данных будет удалена, продолжить? (y/n): ')
 
-                if selection == 'n':
-                    return
+            if selection == 'n':
+                return
 
-                os.unlink(self.storagePath)
+            os.unlink(self.storagePath)
 
-            os.chmod(self.storagePath, 600)
-            self.writeDB('Здесь храним креды и прочую важную инфу\n')
-        except (IOError, OSError):
-            raise Exception('Похоже нехватает прав.. Are you root?')
+        os.chmod(self.storagePath, 600)
+        self.writeDB('Здесь храним креды и прочую важную инфу\n')
 
         print('[OK] База данных успешно создана')
