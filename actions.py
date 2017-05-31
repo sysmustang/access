@@ -77,7 +77,7 @@ class Setup(Base):
 
             os.unlink(self.storagePath)
 
-        os.chmod(self.storagePath, 600)
         self.writeDB('Здесь храним креды и прочую важную инфу\n')
+        os.chmod(self.storagePath, 600)
 
         print('[OK] База данных успешно создана')
